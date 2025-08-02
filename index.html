@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lbazaG - AI iGaming Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-subtitle {
+            color: #5a6c7d;
+            font-size: 1.1rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            color: #5a5a5a;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .kpi-change.positive {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .kpi-change.negative {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .ai-agents {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .agent-item {
+            background: rgba(102, 126, 234, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .insights-section {
+            margin-top: 3rem;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .insight-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .insight-agent {
+            color: #5a6c7d;
+            font-size: 0.85rem;
+        }
+
+        .severity-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .severity-high {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .severity-medium {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .severity-low {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .insight-description {
+            color: #5a6c7d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .insight-timestamp {
+            color: #8a95a5;
+            font-size: 0.8rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-radius: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i> lbazaG
+            </div>
+            <div class="badge">
+                AI iGaming Platform
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-header fade-in">
+            <h1 class="dashboard-title">Platform Overview</h1>
+            <p class="dashboard-subtitle">Real-time analytics and AI insights for your iGaming business</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid fade-in">
+            <div class="kpi-card">
+                <div class="kpi-title">Daily Active Users</div>
+                <div class="kpi-value">15,420</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> +12.5%
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Monthly Revenue</div>
+                <div class="kpi-value">$2.85M</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> +8.3%
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Average RTP</div>
+                <div class="kpi-value">94.2%</div>
+                <div class="kpi-change negative">
+                    <i class="fas fa-arrow-down"></i> -0.3%
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Conversion Rate</div>
+                <div class="kpi-value">3.8%</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i> +15.2%
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and AI Status -->
+        <div class="chart-section fade-in">
+            <div class="chart-card">
+                <h3 class="chart-title">Revenue & Player Growth</h3>
+                <canvas id="revenueChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-robot"></i> AI Agents Status
+                </h3>
+                <div class="ai-agents">
+                    <div class="agent-item">
+                        <div class="agent-header">
+                            <div class="agent-name">
+                                <i class="fas fa-chart-line"></i>
+                                Analytics Agent
+                            </div>
+                            <div class="status-badge status-active">active</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #5a6c7d; margin-bottom: 0.5rem;">
+                            Last run: 2 min ago • 23 insights
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.8rem; color: #5a6c7d;">Accuracy</span>
+                            <span style="font-size: 0.8rem; font-weight: 600;">94.2%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 94.2%; background: #4caf50;"></div>
+                        </div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-header">
+                            <div class="agent-name">
+                                <i class="fas fa-comments"></i>
+                                Customer Service Agent
+                            </div>
+                            <div class="status-badge status-active">active</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #5a6c7d; margin-bottom: 0.5rem;">
+                            Last run: 5 min ago • 156 insights
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.8rem; color: #5a6c7d;">Accuracy</span>
+                            <span style="font-size: 0.8rem; font-weight: 600;">91.8%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 91.8%; background: #4caf50;"></div>
+                        </div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-header">
+                            <div class="agent-name">
+                                <i class="fas fa-bullhorn"></i>
+                                Marketing Agent
+                            </div>
+                            <div class="status-badge status-active">active</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #5a6c7d; margin-bottom: 0.5rem;">
+                            Last run: 1 min ago • 45 insights
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.8rem; color: #5a6c7d;">Accuracy</span>
+                            <span style="font-size: 0.8rem; font-weight: 600;">89.6%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 89.6%; background: #ff9800;"></div>
+                        </div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-header">
+                            <div class="agent-name">
+                                <i class="fas fa-shield-alt"></i>
+                                Risk Management Agent
+                            </div>
+                            <div class="status-badge status-active">active</div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #5a6c7d; margin-bottom: 0.5rem;">
+                            Last run: just now • 12 insights
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.8rem; color: #5a6c7d;">Accuracy</span>
+                            <span style="font-size: 0.8rem; font-weight: 600;">96.1%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 96.1%; background: #4caf50;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent AI Insights -->
+        <div class="insights-section fade-in">
+            <h2 style="font-weight: 600; color: #2c3e50; margin-bottom: 1rem; font-size: 1.5rem;">
+                <i class="fas fa-lightbulb"></i> Recent AI Insights
+            </h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <div class="insight-agent">Analytics Agent</div>
+                        <div class="severity-badge severity-medium">medium</div>
+                    </div>
+                    <div class="insight-title">Unusual spike in slot game activity</div>
+                    <div class="insight-description">
+                        Detected 25% increase in slot game sessions during non-peak hours
+                    </div>
+                    <div class="insight-timestamp">5 minutes ago</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <div class="insight-agent">Risk Management Agent</div>
+                        <div class="severity-badge severity-high">high</div>
+                    </div>
+                    <div class="insight-title">Potential fraud pattern detected</div>
+                    <div class="insight-description">
+                        Multiple accounts showing similar betting patterns from same IP range
+                    </div>
+                    <div class="insight-timestamp">12 minutes ago</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <div class="insight-agent">Marketing Agent</div>
+                        <div class="severity-badge severity-low">low</div>
+                    </div>
+                    <div class="insight-title">Optimal timing for email campaign</div>
+                    <div class="insight-description">
+                        ML analysis suggests 18:30-19:30 for highest engagement rates
+                    </div>
+                    <div class="insight-timestamp">1 hour ago</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>lbazaG Platform © 2024 - Local AI Platform for iGaming Industry</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+                Powered by AI • Real-time Analytics • Comprehensive Automation
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Revenue Chart
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Revenue ($M)',
+                    data: [2.1, 2.3, 2.45, 2.6, 2.75, 2.85],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#667eea',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }, {
+                    label: 'Players (K)',
+                    data: [12, 13.2, 14.1, 14.8, 15.2, 15.42],
+                    borderColor: '#764ba2',
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#764ba2',
+                    pointBorderColor: '#764ba2',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        grid: {
+                            color: '#f0f0f0'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'M';
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'K';
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+
+        // Add loading animation and fade-in effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.kpi-card, .chart-card, .insight-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const timestamp = document.querySelector('.insight-timestamp');
+            if (timestamp && timestamp.textContent === '5 minutes ago') {
+                timestamp.textContent = '6 minutes ago';
+            }
+        }, 60000);
+    </script>
+</body>
+</html>
